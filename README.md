@@ -75,3 +75,35 @@ Think of it as the key to a single-toilet bathroom.
     * The next person waiting grabs it.
 
 > **Atomic:** This means grabbing the key happens in **one instant motion**. You can't be interrupted while reaching for it.
+
+# Unix Threads in c
+
+1) Short introduction to threads
+
+first include the pthread.h library
+
+pthread_t is used to define a thread 
+
+## pthread_create()
+a function is used to create a new thread, takes four parameters:
+
+- a pointer to the thread
+- thread attribute
+- the routine which thread meant to work on
+- argument that is passed to the routine
+
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+    void *(*start_routine)(void*), void *arg);
+
+If successful, pthread_create() returns zero. Otherwise, an error number is returned to indicate the error.
+
+## pthread_join()
+a function used to prevent the main process to finish execute without the thread finish its job
+(like wait() in the processes) but for threads , takes two parameters:
+
+- the thread to be be waited for
+- the thread return value (or the routine function return value).
+
+If successful, pthread_join() returns zero. Otherwise, an error number is returned to indicate the error.
+
+## Race conditions
