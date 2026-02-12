@@ -106,4 +106,26 @@ a function used to prevent the main process to finish execute without the thread
 
 If successful, pthread_join() returns zero. Otherwise, an error number is returned to indicate the error.
 
+You shouldn't create and join the same thread in the same loop iteration because the program will run sequentially not con currently
+
 ## Race conditions
+
+Data race occures whe threads tries to access shared resources simultaneously(ath the same time)
+
+## What is a mutex
+
+its the solution to pervent Data race in programming method:
+
+pthread_mutex_t : to create the semaphore 
+pthread_mutex_lock : to lock it 
+pthread_mutex_unlock : to unlock it
+pthread_mutex_init : to initialize it
+pthread_mutex_destroy : to destroy it
+
+## Gettimeofday()
+
+to use it include the < sys/time.h > then define a variable from struct of type timeval , to print the current time in microsec :
+
+     struct timeval current_time;
+    gettimeofday(&current_time, NULL);
+    printf("current time is : %ld", current_time.tv_usec);
