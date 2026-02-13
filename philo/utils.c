@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:40:54 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/13 10:58:04 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:34:40 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,18 @@ int parser(char **args)
 		i++;
 	}
 	return (1);
+}
+
+void mutex_destroy(int remaining_forks, pthread_mutex_t **forks)
+{
+	int i;
+
+	i = 0;
+	while (i < remaining_forks)
+	{
+		// what if destroy fails?
+		pthread_mutex_destroy(&(*forks)[i]);
+		i++;
+	}
+	free(*forks);
 }

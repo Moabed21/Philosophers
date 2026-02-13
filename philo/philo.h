@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:41:06 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/13 14:25:19 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:36:11 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_args
 typedef struct s_pcard
 {
 	pthread_t *thread;
+	pthread_mutex_t *right_fork;
+	pthread_mutex_t *left_fork;
 	t_args pdetails;
 
 } t_pcard;
@@ -39,8 +41,9 @@ typedef struct s_pcard
 int ft_atoi(const char *nptr);
 int ft_isdigit(int x);
 int parser(char **args);
+void mutex_destroy(int remaining_forks, pthread_mutex_t **forks);
 //------------------
 //-----init---------
-pthread_mutex_t *philo_init(t_args *args, t_pcard **ptable);
+void philo_init(t_args *args, t_pcard **ptable);
 pthread_mutex_t *forks_init(int number_of_forks, t_pcard **ptable);
 #endif
