@@ -6,11 +6,24 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/13 11:26:06 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/13 18:45:50 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void assign_forks(pthread_mutex_t *forks, t_pcard **philos, int philos_number)
+{
+    int i;
+
+    i = 0;
+    while (i < philos_number)
+    {
+        (*philos)[i].right_fork = &forks[(i) % philos_number];
+        (*philos)[i].left_fork = &forks[(i + 1) % philos_number];
+        i++;
+    }
+}
 
 pthread_mutex_t *forks_init(int number_of_forks, t_pcard **ptable)
 {
@@ -21,13 +34,14 @@ pthread_mutex_t *forks_init(int number_of_forks, t_pcard **ptable)
     forks = malloc(sizeof(pthread_mutex_t) * number_of_forks);
     if (!forks)
     {
-        free(ptable);
+        free(*ptable);
         return (NULL);
     }
     while (i < number_of_forks)
     {
-        if (pthread_mutex_init(&forks[i], NULL) == -1)
+        if (pthread_mutex_init(&forks[i], NULL) != 0)
         {
+            mutex_destroy(i, &forks);
             free(*ptable);
             return (NULL);
         }
@@ -36,7 +50,7 @@ pthread_mutex_t *forks_init(int number_of_forks, t_pcard **ptable)
     return (forks);
 }
 
-pthread_mutex_t *philo_init(t_args *args, t_pcard **ptable)
+void philo_init(t_args *args, t_pcard **ptable)
 {
     t_pcard *ptr;
     pthread_mutex_t *forks;
@@ -51,10 +65,7 @@ pthread_mutex_t *philo_init(t_args *args, t_pcard **ptable)
     // add the id number to each one
     forks = forks_init(args->philoscount, ptable);
     if (!forks)
-    {
-        free(*ptable);
         return (NULL);
-    }
     while (++i <= args->philoscount)
     {
         // p takes his number
@@ -66,5 +77,5 @@ pthread_mutex_t *philo_init(t_args *args, t_pcard **ptable)
         ptr->pdetails.tts = args->tts;
         ptr++;
     }
-    return (forks);
+    assign_forks(forks, ptable, args->philoscount);
 }
