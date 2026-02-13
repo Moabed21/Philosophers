@@ -6,16 +6,16 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:40:54 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/13 16:34:40 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/13 20:15:54 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int ft_atoi(const char *nptr)
+int	ft_atoi(const char *nptr)
 {
-	int x;
-	int sign;
+	int	x;
+	int	sign;
 
 	sign = 1;
 	x = 0;
@@ -38,7 +38,7 @@ int ft_atoi(const char *nptr)
 	return (x * sign);
 }
 
-int ft_isdigit(int x)
+int	ft_isdigit(int x)
 {
 	if (x >= 48 && x <= 57)
 		return (1);
@@ -46,11 +46,11 @@ int ft_isdigit(int x)
 		return (0);
 }
 
-int parser(char **args)
+int	parser(char **args)
 {
-	int i;
-	int j;
-	int count;
+	int	i;
+	int	j;
+	int	count;
 
 	i = 1;
 	while (args[i])
@@ -59,7 +59,7 @@ int parser(char **args)
 		j = 0;
 		while (args[i][j])
 		{
-			if (!ft_isdigit(args[i][j]))
+			if (!ft_isdigit(args[i][j]) && args[i][j] <= 48)
 				count++;
 			j++;
 		}
@@ -73,9 +73,9 @@ int parser(char **args)
 	return (1);
 }
 
-void mutex_destroy(int remaining_forks, pthread_mutex_t **forks)
+void	mutex_destroy(int remaining_forks, pthread_mutex_t **forks)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < remaining_forks)
