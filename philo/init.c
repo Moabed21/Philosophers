@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/13 19:33:30 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/14 19:04:01 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,22 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable)
 		ptr->pdetails.ttd = args->ttd;
 		ptr->pdetails.tte = args->tte;
 		ptr->pdetails.tts = args->tts;
+		ptr->is_philo_dead = 0;
 		ptr++;
 	}
 	assign_forks(forks, ptable, args->philoscount);
 	return (forks);
+}
+
+void	hard_work(t_args *args)
+{
+	int				i;
+	t_pcard			*philos;
+	pthread_mutex_t	*forks;
+
+	i = 0;
+	forks = philo_init(args, &philos);
+	if (!forks)
+		return ;
+	routine_start(philos, args->philoscount);
 }
