@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:01:33 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/15 23:39:27 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/15 23:50:36 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,30 @@
 
 void	hold_fork_and_eat(t_pcard *philo, int p_num)
 {
-
+	if (p_num % 2 == 0)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		pthread_mutex_lock(philo->print_mic);
+		printf("%lld %d has taken a fork\n", time_calc(), p_num);
+		pthread_mutex_unlock(philo->print_mic);
+		pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_lock(philo->print_mic);
+		printf("%lld %d has taken a fork\n", time_calc(), p_num);
+		printf("%lld %d is eating\n", time_calc(), p_num);
+		pthread_mutex_unlock(philo->print_mic);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_lock(philo->print_mic);
+		printf("%lld %d has taken a fork\n", time_calc(), p_num);
+		pthread_mutex_unlock(philo->print_mic);
+		pthread_mutex_lock(philo->right_fork);
+		pthread_mutex_lock(philo->print_mic);
+		printf("%lld %d has taken a fork\n", time_calc(), p_num);
+		printf("%lld %d is eating\n", time_calc(), p_num);
+		pthread_mutex_unlock(philo->print_mic);
+	}
 }
 void	*routine(void *p)
 {
@@ -23,11 +46,13 @@ void	*routine(void *p)
 	long long	timestamp;
 
 	philo = (t_pcard *)p;
+	pthread_mutex_lock(philo->print_mic);
 	timestamp = time_calc();
 	printf("%lld %d is thinking\n", timestamp, philo->pdetails.pnumber);
-	hold_fork_and_eat(philo, philo->pdetails.pnumber);
+	pthread_mutex_unlock(philo->print_mic);
 	while (1)
 	{
+		hold_fork_and_eat(philo, philo->pdetails.pnumber);
 	}
 	return (p);
 }
@@ -79,5 +104,3 @@ int	routine_start(t_pcard *philos, int pnum, pthread_mutex_t *forks)
 	return (0);
 }
 // eat operation starts when the two forks (mutexs) are locked
-
-
