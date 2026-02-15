@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/14 19:04:01 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/15 22:52:51 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,17 @@ pthread_mutex_t	*forks_init(int number_of_forks, t_pcard **ptable)
 	return (forks);
 }
 
-pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable)
+pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
+		pthread_mutex_t *print_microphone)
 {
+	int				i;
 	t_pcard			*ptr;
 	pthread_mutex_t	*forks;
-	int				i;
 
 	i = 0;
 	// create the philosophers
 	*ptable = malloc(sizeof(t_pcard) * args->philoscount);
-	if (!*ptable)
+	if (!(*ptable))
 		return (NULL);
 	ptr = (*ptable);
 	// init each fork
@@ -74,6 +75,7 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable)
 		ptr->pdetails.ttd = args->ttd;
 		ptr->pdetails.tte = args->tte;
 		ptr->pdetails.tts = args->tts;
+		ptr->print_mic = print_microphone;
 		ptr->is_philo_dead = 0;
 		ptr++;
 	}
@@ -86,10 +88,23 @@ void	hard_work(t_args *args)
 	int				i;
 	t_pcard			*philos;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*print_microphone;
 
-	i = 0;
-	forks = philo_init(args, &philos);
-	if (!forks)
+	print_microphone = malloc(sizeof(pthread_mutex_t));
+	if (!print_microphone)
 		return ;
-	routine_start(philos, args->philoscount);
+	if (pthread_mutex_init(print_microphone, NULL) != 0)
+	{
+		free(print_microphone);
+		return ;
+	}
+	forks = philo_init(args, &philos, print_microphone);
+	if (!forks)
+	{
+		free(print_microphone);
+		return ;
+	}
+	i = routine_start(philos, args->philoscount, forks);
+	if (i == 1)
+		return ;
 }
