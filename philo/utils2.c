@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 22:06:44 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/16 00:44:20 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/17 00:59:52 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	smart_sleep(long long time, t_pcard *philo)
 	start_time = time_calc();
 	while (time_calc() - start_time < time)
 	{
-		if (philo->is_philo_dead == 1)
+		if ((*philo->is_dead) == 1)
 			break ;
 		usleep(250);
 	}
@@ -53,4 +53,5 @@ void	mess_clean(t_pcard *philos, int pnum, pthread_mutex_t *forks)
 	free(forks);
 	//finally, the table godfather :)
 	free(philos);
+	free(philos->is_dead);
 }

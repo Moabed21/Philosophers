@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/16 01:02:48 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/17 00:54:53 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ pthread_mutex_t	*forks_init(int number_of_forks, t_pcard **ptable)
 		}
 		i++;
 	}
+
 	return (forks);
 }
 
 pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
-		pthread_mutex_t *print_microphone)
+		pthread_mutex_t *print_microphone, int *is_p_dead)
 {
 	int				i;
 	t_pcard			*ptr;
@@ -78,16 +79,21 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
 		ptr->pdetails.tte = args->tte;
 		ptr->pdetails.tts = args->tts;
 		ptr->print_mic = print_microphone;
-		ptr->is_philo_dead = 0;
+		ptr->is_dead = is_p_dead;
 		ptr++;
 	}
 	assign_forks(forks, ptable, args->philoscount);
 	return (forks);
 }
 
+void	final_work(t_args *args,t_pcard	*philos,pthread_mutex_t	*forks)
+{
+	routine_start(philos, args->philoscount, forks);
+}
+
 void	hard_work(t_args *args)
 {
-	int				i;
+	int	*is_dead;
 	t_pcard			*philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*print_microphone;
@@ -95,18 +101,26 @@ void	hard_work(t_args *args)
 	print_microphone = malloc(sizeof(pthread_mutex_t));
 	if (!print_microphone)
 		return ;
+	is_dead= malloc(sizeof(int));
+	if(!is_dead)
+	{
+		free(print_microphone);
+		return ;
+	}
+	*is_dead = 0;
 	if (pthread_mutex_init(print_microphone, NULL) != 0)
 	{
+		free(is_dead);
 		free(print_microphone);
 		return ;
 	}
-	forks = philo_init(args, &philos, print_microphone);
+	forks = philo_init(args, &philos, print_microphone,is_dead);
 	if (!forks)
 	{
+		pthread_mutex_destroy(print_microphone);
 		free(print_microphone);
+		free(is_dead);
 		return ;
 	}
-	i = routine_start(philos, args->philoscount, forks);
-	if (i == 1)
-		return ;
+	final_work(args,philos,forks);
 }

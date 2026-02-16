@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:41:06 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/16 01:24:11 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/17 00:45:15 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ typedef struct s_args
 // each philo must have an id card contains his number , ttd , tte , tts
 typedef struct s_pcard
 {
-	int				is_philo_dead;
+	int		*is_dead;
 	pthread_t		thread;
+	long long		last_meal;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*print_mic;
@@ -53,8 +54,8 @@ void				mess_clean(t_pcard *philos, int pnum,
 						pthread_mutex_t *forks);
 //-----init---------
 void				hard_work(t_args *args);
-pthread_mutex_t		*philo_init(t_args *args, t_pcard **ptable,
-						pthread_mutex_t *print_microphone);
+pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
+		pthread_mutex_t *print_microphone, int *is_p_dead);
 pthread_mutex_t		*forks_init(int number_of_forks, t_pcard **ptable);
 void				assign_forks(pthread_mutex_t *forks, t_pcard **philos,
 						int philos_number);
