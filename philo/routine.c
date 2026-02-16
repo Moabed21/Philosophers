@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:01:33 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/16 01:24:47 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/16 16:55:55 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,35 @@ void	put_forks(t_pcard *philo, int p_num)
 		pthread_mutex_unlock(philo->right_fork);
 	}
 }
+void	philo_sleep(t_pcard *philo)
+{
+	long long	timestamp;
 
+	timestamp = time_calc();
+	smart_sleep(philo->pdetails.tts,philo);
+	pthread_mutex_lock(philo->print_mic);
+	printf("%lld %d is sleeping\n", timestamp, philo->pdetails.pnumber);
+	pthread_mutex_unlock(philo->print_mic);
+}
 void	*routine(void *p)
 {
-	int			i;
 	t_pcard		*philo;
 	long long	timestamp;
 
 	philo = (t_pcard *)p;
-	i = 0;
 	while (1)
 	{
 		pthread_mutex_lock(philo->print_mic);
 		timestamp = time_calc();
 		printf("%lld %d is thinking\n", timestamp, philo->pdetails.pnumber);
 		pthread_mutex_unlock(philo->print_mic);
-		hold_fork_and_eat(&philo[i], philo[i].pdetails.pnumber);
-		smart_sleep(philo[i].pdetails.tte, &philo[i]);
+		hold_fork_and_eat(philo, philo->pdetails.pnumber);
+		philo->pdetails.eatcount--;
+		smart_sleep(philo->pdetails.tte, philo);
 		put_forks(philo, philo->pdetails.pnumber);
+		if(philo->pdetails.eatcount <=0 )
+			break;
+		philo_sleep(philo);
 	}
 	return (p);
 }
