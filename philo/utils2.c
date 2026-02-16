@@ -3,38 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 22:06:44 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/14 20:07:10 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/16 00:44:20 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_stamp(long long timestamp, int pnumber, int status)
-{
-	if (status == 0)
-	{
-		printf("%lld %d died\n", timestamp, pnumber);
-	}
-	else if (status == 1)
-	{
-		printf("%lld %d is thinking\n", timestamp, pnumber);
-	}
-	else if (status == 2)
-	{
-		printf("%lld %d is sleeping\n", timestamp, pnumber);
-	}
-	else if (status == 3)
-	{
-		printf("%lld %d is eating\n", timestamp, pnumber);
-	}
-	else if (status == 4)
-	{
-		printf("%lld %d has taken a fork\n", timestamp, pnumber);
-	}
-}
 long long	time_calc(void)
 {
 	struct timeval	time;
@@ -47,7 +24,7 @@ long long	time_calc(void)
 
 void	smart_sleep(long long time, t_pcard *philo)
 {
-	long long start_time;
+	long long	start_time;
 
 	start_time = time_calc();
 	while (time_calc() - start_time < time)
@@ -56,4 +33,24 @@ void	smart_sleep(long long time, t_pcard *philo)
 			break ;
 		usleep(250);
 	}
+}
+
+void	mess_clean(t_pcard *philos, int pnum, pthread_mutex_t *forks)
+{
+	int i;
+
+	//allocated elements are : print_mic , forks, philosophers
+	i = 0;
+	//first target to be freed : print_mic
+	pthread_mutex_destroy(philos->print_mic);
+	free(philos->print_mic);
+	//then, the forks starting form the right
+	while (i < pnum)
+	{
+		pthread_mutex_destroy(&forks[i]);
+		i++;
+	}
+	free(forks);
+	//finally, the table godfather :)
+	free(philos);
 }

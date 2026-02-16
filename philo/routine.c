@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:01:33 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/15 23:50:36 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/16 01:24:47 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,21 @@ void	hold_fork_and_eat(t_pcard *philo, int p_num)
 		pthread_mutex_unlock(philo->print_mic);
 	}
 }
+
+void	put_forks(t_pcard *philo, int p_num)
+{
+	if (p_num % 2 == 0)
+	{
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+	}
+}
+
 void	*routine(void *p)
 {
 	int			i;
@@ -46,34 +61,18 @@ void	*routine(void *p)
 	long long	timestamp;
 
 	philo = (t_pcard *)p;
-	pthread_mutex_lock(philo->print_mic);
-	timestamp = time_calc();
-	printf("%lld %d is thinking\n", timestamp, philo->pdetails.pnumber);
-	pthread_mutex_unlock(philo->print_mic);
+	i = 0;
 	while (1)
 	{
-		hold_fork_and_eat(philo, philo->pdetails.pnumber);
+		pthread_mutex_lock(philo->print_mic);
+		timestamp = time_calc();
+		printf("%lld %d is thinking\n", timestamp, philo->pdetails.pnumber);
+		pthread_mutex_unlock(philo->print_mic);
+		hold_fork_and_eat(&philo[i], philo[i].pdetails.pnumber);
+		smart_sleep(philo[i].pdetails.tte, &philo[i]);
+		put_forks(philo, philo->pdetails.pnumber);
 	}
 	return (p);
-}
-void	mess_clean(t_pcard *philos, int pnum, pthread_mutex_t *forks)
-{
-	int	i;
-
-	//allocated elements are : print_mic , forks, philosophers
-	i = 0;
-	//first target to be freed : print_mic
-	pthread_mutex_destroy(philos->print_mic);
-	free(philos->print_mic);
-	//then, the forks starting form the right
-	while (i < pnum)
-	{
-		pthread_mutex_destroy(&forks[i]);
-		i++;
-	}
-	free(forks);
-	//finally, the table godfather :)
-	free(philos);
 }
 
 //create two mics (pointers) for the death second for the printing the messages

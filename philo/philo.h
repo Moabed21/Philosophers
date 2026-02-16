@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:41:06 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/15 22:47:14 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/16 01:24:11 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void				mutex_destroy(int remaining_forks, pthread_mutex_t **forks);
 //-----utils2-------
 long long			time_calc(void);
 void				smart_sleep(long long time, t_pcard *philo);
+void				mess_clean(t_pcard *philos, int pnum,
+						pthread_mutex_t *forks);
 //-----init---------
 void				hard_work(t_args *args);
 pthread_mutex_t		*philo_init(t_args *args, t_pcard **ptable,

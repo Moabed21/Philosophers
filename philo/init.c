@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/15 22:52:51 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/16 01:02:48 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
 	ptr = (*ptable);
 	// init each fork
 	forks = forks_init(args->philoscount, ptable);
+	if (!forks)
+		return (NULL);
 	while (++i <= args->philoscount)
 	{
 		// p takes his number
