@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:01:33 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/16 16:55:55 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/17 01:21:34 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	hold_fork_and_eat(t_pcard *philo, int p_num)
 {
+	philo->last_meal = time_calc();
 	if (p_num % 2 == 0)
 	{
 		pthread_mutex_lock(philo->right_fork);
@@ -55,37 +56,57 @@ void	put_forks(t_pcard *philo, int p_num)
 }
 void	philo_sleep(t_pcard *philo)
 {
-	long long	timestamp;
-
-	timestamp = time_calc();
-	smart_sleep(philo->pdetails.tts,philo);
 	pthread_mutex_lock(philo->print_mic);
-	printf("%lld %d is sleeping\n", timestamp, philo->pdetails.pnumber);
+	printf("%lld %d is sleeping\n", time_calc(), philo->pdetails.pnumber);
 	pthread_mutex_unlock(philo->print_mic);
+	smart_sleep(philo->pdetails.tts, philo);
 }
 void	*routine(void *p)
 {
 	t_pcard		*philo;
-	long long	timestamp;
+	
 
 	philo = (t_pcard *)p;
 	while (1)
 	{
 		pthread_mutex_lock(philo->print_mic);
-		timestamp = time_calc();
-		printf("%lld %d is thinking\n", timestamp, philo->pdetails.pnumber);
+		printf("%lld %d is thinking\n", time_calc(), philo->pdetails.pnumber);
 		pthread_mutex_unlock(philo->print_mic);
 		hold_fork_and_eat(philo, philo->pdetails.pnumber);
 		philo->pdetails.eatcount--;
 		smart_sleep(philo->pdetails.tte, philo);
 		put_forks(philo, philo->pdetails.pnumber);
-		if(philo->pdetails.eatcount <=0 )
+		if((*philo->is_dead) == 1 || philo->pdetails.eatcount <= 0)
 			break;
 		philo_sleep(philo);
 	}
 	return (p);
 }
 
+void	master_of_masters(t_pcard **philos, int pnum)
+{
+	int			i;
+	long long	difference;
+
+	i = 0;
+	while (i < pnum)
+	{
+		difference = time_calc() - (*philos)[i].last_meal;
+		if (difference >= (*philos)[i].pdetails.ttd)
+		{
+			pthread_mutex_lock((*philos)->print_mic);
+			printf("%lld %d has died\n", time_calc(),
+					(*philos)[i].pdetails.pnumber);
+			pthread_mutex_unlock((*philos)->print_mic);
+			(*(*philos)[i].is_dead) = 1;
+			break;
+		}
+		i++;
+		if(i >= pnum)
+			i = 0;
+	}
+	return ;
+}
 //create two mics (pointers) for the death second for the printing the messages
 int	routine_start(t_pcard *philos, int pnum, pthread_mutex_t *forks)
 {
@@ -101,6 +122,7 @@ int	routine_start(t_pcard *philos, int pnum, pthread_mutex_t *forks)
 		}
 		i++;
 	}
+	master_of_masters(&philos, pnum);
 	i = 0;
 	while (i < pnum)
 	{
@@ -113,4 +135,3 @@ int	routine_start(t_pcard *philos, int pnum, pthread_mutex_t *forks)
 	}
 	return (0);
 }
-// eat operation starts when the two forks (mutexs) are locked
