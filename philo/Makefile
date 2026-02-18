@@ -6,7 +6,7 @@ OBJ =$(SRC:.c=.o)
 RM = rm -f
 all : $(NAME)
 
-$(NAME) : $(OBJ)
+$(NAME) : $(OBJ) philo.h
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean :
