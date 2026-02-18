@@ -6,25 +6,11 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/17 00:54:53 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/18 21:11:52 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	assign_forks(pthread_mutex_t *forks, t_pcard **philos,
-		int philos_number)
-{
-	int	i;
-
-	i = 0;
-	while (i < philos_number)
-	{
-		(*philos)[i].right_fork = &forks[(i) % philos_number];
-		(*philos)[i].left_fork = &forks[(i + 1) % philos_number];
-		i++;
-	}
-}
 
 pthread_mutex_t	*forks_init(int number_of_forks, t_pcard **ptable)
 {
@@ -48,12 +34,10 @@ pthread_mutex_t	*forks_init(int number_of_forks, t_pcard **ptable)
 		}
 		i++;
 	}
-
 	return (forks);
 }
 
-pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
-		pthread_mutex_t *print_microphone, int *is_p_dead)
+pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable)
 {
 	int				i;
 	t_pcard			*ptr;
@@ -61,9 +45,6 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
 
 	i = 0;
 	// create the philosophers
-	*ptable = malloc(sizeof(t_pcard) * args->philoscount);
-	if (!(*ptable))
-		return (NULL);
 	ptr = (*ptable);
 	// init each fork
 	forks = forks_init(args->philoscount, ptable);
@@ -78,49 +59,79 @@ pthread_mutex_t	*philo_init(t_args *args, t_pcard **ptable,
 		ptr->pdetails.ttd = args->ttd;
 		ptr->pdetails.tte = args->tte;
 		ptr->pdetails.tts = args->tts;
-		ptr->print_mic = print_microphone;
-		ptr->is_dead = is_p_dead;
+		ptr->last_meal = time_calc();
 		ptr++;
 	}
 	assign_forks(forks, ptable, args->philoscount);
 	return (forks);
 }
 
-void	final_work(t_args *args,t_pcard	*philos,pthread_mutex_t	*forks)
+int	mini_init(t_pcard **ptable, int *is_p_dead,
+		pthread_mutex_t *print_microphone, int p_count)
 {
-	routine_start(philos, args->philoscount, forks);
+	int		i;
+	t_pcard	*ptr;
+
+	ptr = (*ptable);
+	i = 0;
+	if (pthread_mutex_init(print_microphone, NULL) != 0)
+	{
+		free(is_p_dead);
+		free(*ptable);
+		free(print_microphone);
+		return (1);
+	}
+	while (i < p_count)
+	{
+		ptr->print_mic = print_microphone;
+		ptr->is_dead = is_p_dead;
+		ptr++;
+		i++;
+	}
+	*((*ptable)->is_dead) = 0;
+	return (0);
 }
 
-void	hard_work(t_args *args)
+int	hard_w2(t_pcard **ptable, int p_count)
 {
-	int	*is_dead;
-	t_pcard			*philos;
-	pthread_mutex_t	*forks;
+	int				*is_dead;
 	pthread_mutex_t	*print_microphone;
 
 	print_microphone = malloc(sizeof(pthread_mutex_t));
 	if (!print_microphone)
-		return ;
-	is_dead= malloc(sizeof(int));
-	if(!is_dead)
 	{
-		free(print_microphone);
-		return ;
+		free(*ptable);
+		return (1);
 	}
-	*is_dead = 0;
-	if (pthread_mutex_init(print_microphone, NULL) != 0)
+	is_dead = malloc(sizeof(int));
+	if (!is_dead)
 	{
-		free(is_dead);
+		free(*ptable);
 		free(print_microphone);
-		return ;
+		return (1);
 	}
-	forks = philo_init(args, &philos, print_microphone,is_dead);
+	if (mini_init(ptable, is_dead, print_microphone, p_count) == 1)
+		return (1);
+	return (0);
+}
+
+void	hard_w1(t_args *args)
+{
+	t_pcard			*ptable;
+	pthread_mutex_t	*forks;
+
+	ptable = malloc(sizeof(t_pcard) * args->philoscount);
+	if (!ptable)
+		return ;
+	if (hard_w2(&ptable, args->philoscount) == 1)
+		return ;
+	forks = philo_init(args, &ptable);
 	if (!forks)
 	{
-		pthread_mutex_destroy(print_microphone);
-		free(print_microphone);
-		free(is_dead);
+		pthread_mutex_destroy(ptable->print_mic);
+		free(ptable->print_mic);
+		free(ptable->is_dead);
 		return ;
 	}
-	final_work(args,philos,forks);
+	routine_start(ptable, args->philoscount, forks);
 }
