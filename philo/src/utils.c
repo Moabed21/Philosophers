@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:40:54 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/20 17:13:14 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/20 23:56:46 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,23 +80,22 @@ void	mutex_destroy(int remaining_forks, pthread_mutex_t **forks)
 	i = 0;
 	while (i < remaining_forks)
 	{
-		// what if destroy fails?
 		pthread_mutex_destroy(&(*forks)[i]);
 		i++;
 	}
 	free(*forks);
 }
 
-void safe_print(t_pcard *philo, char *str)
+void	safe_print(t_pcard *philo, char *str)
 {
-    pthread_mutex_lock(philo->store_mutex);
-    if (*philo->is_dead)
-    {
-        pthread_mutex_unlock(philo->store_mutex);
-        return;
-    }
-    pthread_mutex_unlock(philo->store_mutex);
-    pthread_mutex_lock(philo->print_mic);
-    printf("%lld %d %s\n", time_calc(), philo->pdetails.pnumber, str);
-    pthread_mutex_unlock(philo->print_mic);
+	pthread_mutex_lock(philo->store_mutex);
+	if (*philo->is_dead)
+	{
+		pthread_mutex_unlock(philo->store_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(philo->store_mutex);
+	pthread_mutex_lock(philo->print_mic);
+	printf("%lld %d %s\n", time_calc(), philo->pdetails.pnumber, str);
+	pthread_mutex_unlock(philo->print_mic);
 }
