@@ -1,4 +1,6 @@
-# 🛠️ Philosophers : The "Lite" Version
+*This project has been created as part of the 42 curriculum by moabed*
+
+## Description:
 
 > A simplified implementation of the classic **Dining Philosophers Problem** using **Unix threads in C**.  
 > This project explores 🧵 threads, 🔒 synchronization, ⏱️ timing, and 🧠 memory concepts in a practical and visual way.
@@ -318,6 +320,23 @@ Understanding threads and synchronization is fundamental for:
 - Game engines
 - Embedded systems
 
-This project builds strong foundations in **concurrent programming in C** — one of the most powerful and challenging areas in systems development.
+## Instructions:
 
-Happy coding! 👨‍💻🔥
+1- compilation: run "make" in the philo directory to execute the code
+
+2- execution: to run the program just type ./philo < number_of_philosophers > < time_to_die (in milliseconds) > < time_to_eat (in milliseconds) > < time_to_sleep (in milliseconds) >
+
+< number_of_times_each_philosopher_must_eat (optional argument) >  If all philosophers have eaten at least number_of_times_each_philosopher_must_eat times, the simulation stops.
+If not specified, the simulation stops when a philosopher dies.
+
+## Resources: 
+
+1) [Unix Threads in C](playlist) : https://youtube.com/playlist?list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&si=gpauzSCOB-1u4DzD
+
+2) [The Dining Philosophers Problem](video) : https://youtu.be/FYUi-u7UWgw?si=0zYeElF9Z37hYNKL
+
+3) [42-Philosophers](playlist) : https://youtube.com/playlist?list=PLGU1kcPKHMKi41Py2kqxdvqYE3M9VhCHe&si=fp7ERBaJCK2Ym5zy
+
+### How AI was used:
+
+I used AI in a logical way to help me in error handling , clarifying some concepts.

@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 22:06:44 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/20 20:14:29 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/21 00:40:02 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	smart_sleep(long long time, t_pcard *philo)
 			break ;
 		}
 		pthread_mutex_unlock(philo->store_mutex);
-		ft_usleep(100);
+		usleep(100);
 	}
 }
 
