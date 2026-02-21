@@ -39,7 +39,7 @@ typedef struct s_pcard
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*store_mutex;
 	long long		last_meal;
-	long long timestamp;
+	long long		timestamp;
 	t_args			pdetails;
 }					t_pcard;
 
@@ -70,7 +70,7 @@ int					hard_w2(t_pcard **ptable, int p_count);
 int					mini_init(t_pcard **ptable, int *is_p_dead,
 						pthread_mutex_t *print_microphone, int p_count);
 pthread_mutex_t		*philo_init(t_args *args, t_pcard **ptable);
-void	time_loop(t_pcard **philos,int p_num);
+void				time_loop(t_pcard **philos, int p_num);
 
 //------init2-------
 int					store_init(t_pcard **ptable, pthread_mutex_t *store,

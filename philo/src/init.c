@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 04:47:20 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/21 19:09:31 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/21 20:41:10 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,24 @@ int	hard_w2(t_pcard **ptable, int p_count)
 		return (1);
 	return (0);
 }
-void	time_loop(t_pcard **philos,int p_num)
+
+void	time_loop(t_pcard **philos, int p_num)
 {
-	int i;
-	t_pcard *ptr;
-	long long timestamp;
+	int			i;
+	t_pcard		*ptr;
+	long long	timestamp;
 
 	i = 0;
 	ptr = (*philos);
 	timestamp = time_calc();
-	while (i<p_num)
+	while (i < p_num)
 	{
 		ptr->timestamp = timestamp;
 		ptr++;
 		i++;
 	}
 }
+
 void	hard_w1(t_args *args)
 {
 	t_pcard			*ptable;
@@ -132,6 +134,6 @@ void	hard_w1(t_args *args)
 		free_fun(&ptable, forks);
 		return ;
 	}
-	time_loop(&ptable,args->philoscount);
+	time_loop(&ptable, args->philoscount);
 	routine_start(ptable, args->philoscount, forks);
 }
