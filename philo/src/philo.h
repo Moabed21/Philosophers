@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:41:06 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/20 23:56:10 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/21 19:53:41 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ typedef struct s_args
 typedef struct s_pcard
 {
 	int				*is_dead;
-	pthread_mutex_t	*store_mutex;
 	pthread_t		thread;
-	long long		last_meal;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*print_mic;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*store_mutex;
+	long long		last_meal;
+	long long timestamp;
 	t_args			pdetails;
-
 }					t_pcard;
 
 //-----utils--------
@@ -70,6 +70,7 @@ int					hard_w2(t_pcard **ptable, int p_count);
 int					mini_init(t_pcard **ptable, int *is_p_dead,
 						pthread_mutex_t *print_microphone, int p_count);
 pthread_mutex_t		*philo_init(t_args *args, t_pcard **ptable);
+void	time_loop(t_pcard **philos,int p_num);
 
 //------init2-------
 int					store_init(t_pcard **ptable, pthread_mutex_t *store,

@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:40:54 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/20 23:56:46 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/21 19:14:50 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,6 @@ void	safe_print(t_pcard *philo, char *str)
 	}
 	pthread_mutex_unlock(philo->store_mutex);
 	pthread_mutex_lock(philo->print_mic);
-	printf("%lld %d %s\n", time_calc(), philo->pdetails.pnumber, str);
+	printf("%lld %d %s\n", time_calc()- philo->timestamp, philo->pdetails.pnumber, str);
 	pthread_mutex_unlock(philo->print_mic);
 }

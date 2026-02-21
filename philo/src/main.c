@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moabed <moabed@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 18:41:00 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/21 14:35:48 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/21 18:57:16 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
 void    *one_routine(void *p)
 {
     t_args *args;
