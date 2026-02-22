@@ -6,7 +6,7 @@
 /*   By: moabed <moabed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 20:01:33 by moabed            #+#    #+#             */
-/*   Updated: 2026/02/20 23:54:40 by moabed           ###   ########.fr       */
+/*   Updated: 2026/02/22 20:31:58 by moabed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void	master_of_masters(t_pcard *philos, int p_count)
 			}
 			i++;
 		}
-		if (if_all_have_eaten(philos, p_count))
-			return ;
+		// if (if_all_have_eaten(philos, p_count))
+		// 	return ;
 		usleep(1000);
 	}
 }
